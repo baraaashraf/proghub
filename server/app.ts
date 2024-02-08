@@ -1,5 +1,6 @@
 import express, { RequestHandler } from "express";
 import { db } from "./data";
+import { createPost, listPosts } from "./handlers/postHandlers";
 const app = express();
 const port = 3000;
 app.use(express.json());
@@ -13,15 +14,9 @@ const requestLoggerMiddleware: RequestHandler = (req, res, next) => {
 
 app.use(requestLoggerMiddleware);
 
-app.get("/posts", (req, res) => {
-  res.send({ posts:db.listPosts });
-});
+app.get("/posts", listPosts);
 
-app.post("/posts", (req, res) => {
-  const post = req.body;
-  db.createPost(post)
-  res.sendStatus(200)
-});
+app.post("/posts", createPost);
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`);
