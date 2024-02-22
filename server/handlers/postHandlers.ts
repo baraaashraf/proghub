@@ -3,17 +3,24 @@ import { db } from "../data";
 import { Post } from "../types";
 import crypto from "crypto";
 import { ExpressHandler } from "../types";
+import {
+  CreatePostRequest,
+  CreatePostResponse,
+  ListPostsRequest,
+  ListPostsResponse,
+} from "../api";
 
-export const listPosts: ExpressHandler<{}, {}> = (req, res) => {
-  res.send({ posts: db.listPosts() });
+export const listPosts: ExpressHandler<
+  ListPostsRequest,
+  ListPostsResponse
+> = async (req, res) => {
+  res.send({ posts: await db.listPosts() });
 };
 
-type CreatePostRequest = Pick<Post, "title" | "url" | "userId">;
-interface CreatePostResponse {}
 export const createPost: ExpressHandler<
   CreatePostRequest,
   CreatePostResponse
-> = (req, res) => {
+> = async (req, res) => {
   if (!req.body.title || !req.body.url || !req.body.userId) {
     res.sendStatus(400);
   }
@@ -24,6 +31,6 @@ export const createPost: ExpressHandler<
     url: req.body.url,
     userId: req.body.userId,
   };
-  db.createPost(post);
+  await db.createPost(post);
   res.sendStatus(200);
 };
