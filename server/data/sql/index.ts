@@ -1,18 +1,21 @@
 import { DataStore } from "..";
 import { User, Post, Like, Comment } from "../../types";
 import sqlite3 from "sqlite3";
-import { open as sqliteOpen } from "sqlite";
+import { open as sqliteOpen, Database } from "sqlite";
 import path from "path";
 
 export class SqlDataStore implements DataStore {
+  private db!: Database<sqlite3.Database, sqlite3.Statement>;
   public async openDb() {
     // open the database
-    const db = await sqliteOpen({
+    this.db = await sqliteOpen({
       filename: path.join(__dirname, "proghub.sqlite"),
       driver: sqlite3.Database,
     });
 
-    await db.migrate({
+    this.db.run("PRAGMA foreign_keys = ON");
+
+    await this.db.migrate({
       migrationsPath: path.join(__dirname, "migrations"),
     });
     return this;
@@ -33,10 +36,17 @@ export class SqlDataStore implements DataStore {
     throw new Error("Method not implemented.");
   }
   listPosts(userId?: string): Promise<Post[]> {
-    throw new Error("Method not implemented.");
+    return this.db.all<Post[]>("SELECT * from posts");
   }
-  createPost(post: Post): Promise<void> {
-    throw new Error("Method not implemented.");
+  async createPost(post: Post): Promise<void> {
+    await this.db.run(
+      "INSERT INTO posts (id, title, url, postedAt, userId) VALUES (?,?,?,?,?)",
+      post.id,
+      post.title,
+      post.url,
+      post.postedAt,
+      post.userId
+    );
   }
   getPost(id: string, userId?: string): Promise<Post> {
     throw new Error("Method not implemented.");
