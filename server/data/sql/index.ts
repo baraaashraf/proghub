@@ -20,8 +20,16 @@ export class SqlDataStore implements DataStore {
     });
     return this;
   }
-  createUser(user: User): Promise<void> {
-    throw new Error("Method not implemented.");
+  async createUser(user: User): Promise<void> {
+    await this.db.run(
+      'INSERT INTO users (id, email, password, firstName, lastName, userName) VALUES (?,?,?,?,?,?)',
+      user.id,
+      user.email,
+      user.password,
+      user.firstName,
+      user.lastName,
+      user.userName
+    );
   }
   updateCurrentUser(user: Partial<User>): Promise<void> {
     throw new Error("Method not implemented.");
@@ -30,10 +38,13 @@ export class SqlDataStore implements DataStore {
     throw new Error("Method not implemented.");
   }
   getUserByEmail(email: string): Promise<User> {
-    throw new Error("Method not implemented.");
+    return this.db.get<User>(`Select * from users where email = ?`, email);
   }
   getUserByUsername(userName: string): Promise<User> {
-    throw new Error("Method not implemented.");
+    return this.db.get<User>(
+      `Select * from users where username = ?`,
+      userName
+    );
   }
   listPosts(userId?: string): Promise<Post[]> {
     return this.db.all<Post[]>("SELECT * from posts");

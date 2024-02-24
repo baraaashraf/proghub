@@ -1,7 +1,9 @@
 import express, { RequestHandler, ErrorRequestHandler } from "express";
 import { initDB } from "./data";
 import { createPost, listPosts } from "./handlers/postHandlers";
-
+import { signUp, signIn } from "./handlers/authHandlers";
+import { requestLoggerMiddleware } from "./middleware/loggerMiddleware";
+import { errHandler } from "./middleware/errorMiddleware";
 (async () => {
   await initDB();
   const app = express();
@@ -10,21 +12,15 @@ import { createPost, listPosts } from "./handlers/postHandlers";
 
   const posts = [];
 
-  const requestLoggerMiddleware: RequestHandler = (req, res, next) => {
-    console.log(req.method, req.path, "=BODY:", req.body);
-    next();
-  };
-
   app.use(requestLoggerMiddleware);
 
-  app.get("/posts", listPosts);
+  app.get("/v1/posts", listPosts);
 
-  app.post("/posts", createPost);
+  app.post("/v1/posts", createPost);
 
-  const errHandler: ErrorRequestHandler = (err, req, res, next) => {
-    console.error("Uncaught Exception", err);
-    res.status(500).send("Oops, an error occured, please try again");
-  };
+  app.post("/v1/signup", signUp);
+
+  app.post("/v1/signin", signIn);
 
   app.use(errHandler);
 
