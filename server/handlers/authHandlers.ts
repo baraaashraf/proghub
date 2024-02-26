@@ -4,24 +4,26 @@ import {
   SignInRequest,
   SignUpResponse,
 } from "../api";
-import { ExpressHandler } from "../types";
+import { ExpressHandler, JwtObject } from "../types";
 import { db } from "../data";
 import { User } from "../types";
 import crypto from "crypto";
+import { signJwt } from "../auth";
+
 export const signUp: ExpressHandler<SignUpRequest, SignUpResponse> = async (
   req,
   res
 ) => {
   const { email, firstName, lastName, password, userName } = req.body;
 
-  if (!email || !userName || !password) {
-    return res.sendStatus(400);
+  if (!email || !userName || !firstName || !lastName || !password) {
+    return res.status(400).send({ error: "Enter all fields" });
   }
 
   const existing =
     (await db.getUserByEmail(email)) || (await db.getUserByUsername(userName));
   if (existing) {
-    return res.status(403);
+    return res.status(403).send({ error: "Already Existing" });
   }
 
   const user: User = {
@@ -33,7 +35,8 @@ export const signUp: ExpressHandler<SignUpRequest, SignUpResponse> = async (
     password,
   };
   await db.createUser(user);
-  return res.sendStatus(200);
+  const jwt = signJwt({ userId: user.id });
+  return res.status(200).send({ jwt });
 };
 
 export const signIn: ExpressHandler<SignInRequest, SignInResponse> = async (
@@ -51,11 +54,18 @@ export const signIn: ExpressHandler<SignInRequest, SignInResponse> = async (
     return res.sendStatus(403);
   }
 
+  const jwt = signJwt({
+    userId: existing.id,
+  });
+
   return res.status(200).send({
-    email: existing.email,
-    firstName: existing.firstName,
-    lastName: existing.lastName,
-    id: existing.id,
-    userName: existing.userName,
+    user: {
+      email: existing.email,
+      firstName: existing.firstName,
+      lastName: existing.lastName,
+      id: existing.id,
+      userName: existing.userName,
+    },
+    jwt,
   });
 };

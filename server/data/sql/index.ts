@@ -35,7 +35,7 @@ export class SqlDataStore implements DataStore {
     throw new Error("Method not implemented.");
   }
   getUserById(id: string): Promise<User> {
-    throw new Error("Method not implemented.");
+    return this.db.get<User>(`Select * from users where id = ?`, id);
   }
   getUserByEmail(email: string): Promise<User> {
     return this.db.get<User>(`Select * from users where email = ?`, email);

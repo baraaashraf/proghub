@@ -16,7 +16,7 @@ export class InMemoryDataStore implements DataStore {
     return Promise.resolve(this.users.find((u) => u.email === email));
   }
   getUserByUsername(username: string): Promise<User> {
-    return Promise.resolve(this.users.find((u) => u.username === username));
+    return Promise.resolve(this.users.find((u) => u.userName === username));
   }
   getUserById(id: string): Promise<User> | undefined {
     return Promise.resolve(this.users.find((u) => u.id === id));
