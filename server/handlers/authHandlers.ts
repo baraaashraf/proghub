@@ -26,13 +26,14 @@ export const signUp: ExpressHandler<SignUpRequest, SignUpResponse> = async (
     return res.status(403).send({ error: "Already Existing" });
   }
 
+  const passwordHash = hashPassword(password)
   const user: User = {
     id: crypto.randomUUID(),
     email,
     firstName,
     lastName,
     userName,
-    password,
+    password: passwordHash,
   };
   await db.createUser(user);
   const jwt = signJwt({ userId: user.id });
@@ -48,9 +49,11 @@ export const signIn: ExpressHandler<SignInRequest, SignInResponse> = async (
     return res.sendStatus(400);
   }
 
+  const passwordHash = hashPassword(password)
+
   const existing =
     (await db.getUserByEmail(login)) || (await db.getUserByUsername(login));
-  if (!existing || existing.password !== password) {
+  if (!existing || existing.password !== passwordHash) {
     return res.sendStatus(403);
   }
 
@@ -69,3 +72,9 @@ export const signIn: ExpressHandler<SignInRequest, SignInResponse> = async (
     jwt,
   });
 };
+
+function hashPassword(password:string):string{
+  return crypto
+    .pbkdf2Sync(password, process.env.PASSWORD_SALT, 10, 64, "SHA512")
+    .toString("hex");
+}
