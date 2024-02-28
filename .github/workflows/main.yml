@@ -1,0 +1,20 @@
+name: Droplet Deployer
+
+on:
+  push: 
+    branches: [ deploy-prod ]
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy and Restart web server
+        run:
+          cd server 
+          npm install
+          PORT=3000 PASSWORD_SALT=MYVERYSECRETSALT JWT_SECRET=12345 ENV=production npm run start:prod
+          
+      
+      
