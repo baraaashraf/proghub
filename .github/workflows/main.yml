@@ -11,8 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Deploy and Restart web server
-        run:
-          cd server 
+        run: |
+          cd "server"
           npm install
           PORT=3000 PASSWORD_SALT=MYVERYSECRETSALT JWT_SECRET=12345 ENV=production npm run start:prod
           
