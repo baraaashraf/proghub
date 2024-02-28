@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.ts",
     "dev": "nodemon app.ts",
-    "start:prod" : "pm2 delete proghub; pm2 start --name proghub \"npx ts-node --transpile-only server.ts\"",
+    "start:prod" : "pm2 delete proghub; pm2 start --name proghub \"npx ts-node --transpile-only app.ts\"",
     "stop": "pm2 delete proghub"
     
   },
