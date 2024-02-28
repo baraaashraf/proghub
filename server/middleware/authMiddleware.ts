@@ -6,7 +6,7 @@ export const authMiddleware: ExpressHandler<any, any> = async (
   res,
   next
 ) => {
-  const token = req.headers.authorization?.split(' ')[1];
+  const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
     return res.sendStatus(401);
   }
@@ -18,8 +18,9 @@ export const authMiddleware: ExpressHandler<any, any> = async (
       throw "User Not Found";
     }
 
+    res.locals.userId = user.id;
+
     next();
-    
   } catch (error) {
     return res.status(401).send({ error: "bad token" });
   }

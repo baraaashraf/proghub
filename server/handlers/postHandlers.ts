@@ -21,7 +21,7 @@ export const createPost: ExpressHandler<
   CreatePostRequest,
   CreatePostResponse
 > = async (req, res) => {
-  if (!req.body.title || !req.body.url || !req.body.userId) {
+  if (!req.body.title || !req.body.url) {
     res.sendStatus(400);
   }
   const post: Post = {
@@ -29,7 +29,7 @@ export const createPost: ExpressHandler<
     postedAt: Date.now(),
     title: req.body.title,
     url: req.body.url,
-    userId: req.body.userId,
+    userId: res.locals.userId
   };
   await db.createPost(post);
   res.sendStatus(200);
