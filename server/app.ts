@@ -15,7 +15,7 @@ import { authMiddleware } from "./middleware/authMiddleware";
 
   app.use(requestLoggerMiddleware);
 
-  app.get("/healthz", (req, res) => res.send({ status: "OK" }));
+  app.get("/healthz", (req, res) => res.send({ status: "OK!!" }));
 
   app.post("/v1/signup", signUp);
 
