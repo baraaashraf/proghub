@@ -13,23 +13,23 @@ import { authMiddleware } from "./middleware/authMiddleware";
   const port = 3000;
   app.use(express.json());
 
-  const posts = [];
-
   app.use(requestLoggerMiddleware);
+
+  app.get("/healthz", (req, res) => ({ status: "OK" }));
 
   app.post("/v1/signup", signUp);
 
   app.post("/v1/signin", signIn);
 
   app.use(authMiddleware);
-  
+
   app.get("/v1/posts", listPosts);
 
   app.post("/v1/posts", createPost);
 
   app.use(errHandler);
 
-  app.listen(port, () => {
+  app.listen(process.env.PORT || port, () => {
     return console.log(`Express is listening at http://localhost:${port}`);
   });
 })();
