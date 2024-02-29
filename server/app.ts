@@ -44,7 +44,9 @@ import { authMiddleware } from "./middleware/authMiddleware";
       "/home/proghub-user/certs/privkey.pem",
       "utf-8"
     );
+
     const cert = fs.readFileSync("/home/proghub-user/certs/cert.pem", "utf-8");
+    
     https.createServer({ key, cert }, app).listen(port, listener);
   } else {
     app.listen(process.env.PORT || port, listener);
