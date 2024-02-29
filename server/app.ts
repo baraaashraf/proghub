@@ -31,7 +31,7 @@ import { authMiddleware } from "./middleware/authMiddleware";
 
   app.use(errHandler);
 
-  const env = process.env.PORT;
+  const env = process.env.ENV;
 
   const listener = () => {
     console.log(
