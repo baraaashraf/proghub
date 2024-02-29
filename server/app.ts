@@ -12,7 +12,6 @@ import { authMiddleware } from "./middleware/authMiddleware";
   await initDB();
   dotenv.config();
   const app = express();
-  const port = 3000;
   app.use(express.json());
 
   app.use(requestLoggerMiddleware);
@@ -32,6 +31,7 @@ import { authMiddleware } from "./middleware/authMiddleware";
   app.use(errHandler);
 
   const env = process.env.ENV;
+  const port = process.env.PORT
 
   const listener = () => {
     console.log(
@@ -47,6 +47,6 @@ import { authMiddleware } from "./middleware/authMiddleware";
     const cert = fs.readFileSync("/home/proghub-user/certs/cert.pem", "utf-8");
     https.createServer({ key, cert }, app).listen(port, listener);
   } else {
-    app.listen(process.env.PORT || port, listener);
+    app.listen(port, listener);
   }
 })();
