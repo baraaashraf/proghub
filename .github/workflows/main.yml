@@ -14,7 +14,7 @@ jobs:
         run:
           cd server 
           npm install
-          PORT=3000 PASSWORD_SALT=MYVERYSECRETSALT JWT_SECRET=12345 ENV=production npm run start:prod
+          PORT=80 PASSWORD_SALT=MYVERYSECRETSALT JWT_SECRET=12345 ENV=production npm run start:prod
           
       
       
