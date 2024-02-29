@@ -1,4 +1,6 @@
 import express, { RequestHandler, ErrorRequestHandler } from "express";
+import https from "https";
+import fs from "fs";
 import { initDB } from "./data";
 import { createPost, listPosts } from "./handlers/postHandlers";
 import { signUp, signIn } from "./handlers/authHandlers";
@@ -15,7 +17,7 @@ import { authMiddleware } from "./middleware/authMiddleware";
 
   app.use(requestLoggerMiddleware);
 
-  app.get("/healthz", (req, res) => res.send({ status: "OK" }));
+  app.get("/healthz", (req, res) => res.send({ status: "OK!!" }));
 
   app.post("/v1/signup", signUp);
 
@@ -29,7 +31,22 @@ import { authMiddleware } from "./middleware/authMiddleware";
 
   app.use(errHandler);
 
-  app.listen(process.env.PORT || port, () => {
-    return console.log(`Express is listening at http://localhost:${port}`);
-  });
+  const env = process.env.ENV;
+
+  const listener = () => {
+    console.log(
+      `Express is listening at http://localhost:${port} on ${env} enviroment`
+    );
+  };
+
+  if (env === "prod") {
+    const key = fs.readFileSync(
+      "/home/proghub-user/certs/privkey.pem",
+      "utf-8"
+    );
+    const cert = fs.readFileSync("/home/proghub-user/certs/cert.pem", "utf-8");
+    https.createServer({ key, cert }, app).listen(port, listener);
+  } else {
+    app.listen(process.env.PORT || port, listener);
+  }
 })();

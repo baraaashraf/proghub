@@ -9,10 +9,10 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Deploy and Restart web server
-        run:
-          cd server 
+        run: |
+          cd server
           npm install
           PORT=80 PASSWORD_SALT=MYVERYSECRETSALT JWT_SECRET=12345 ENV=production npm run start:prod
           
