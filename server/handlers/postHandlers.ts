@@ -1,14 +1,14 @@
 import { RequestHandler } from "express";
 import { db } from "../data";
-import { Post } from "../types";
+import { Post } from "../../shared/src/types";
 import crypto from "crypto";
-import { ExpressHandler } from "../types";
+import { ExpressHandler } from "../../shared/src/types";
 import {
   CreatePostRequest,
   CreatePostResponse,
   ListPostsRequest,
   ListPostsResponse,
-} from "../api";
+} from "../../shared/src/api";
 
 export const listPosts: ExpressHandler<
   ListPostsRequest,

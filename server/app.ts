@@ -8,6 +8,8 @@ import { requestLoggerMiddleware } from "./middleware/loggerMiddleware";
 import { errHandler } from "./middleware/errorMiddleware";
 import dotenv from "dotenv";
 import { authMiddleware } from "./middleware/authMiddleware";
+import { ENDPOINT_CONFIGS, Endpoints } from "../shared";
+
 (async () => {
   await initDB();
   dotenv.config();
@@ -18,20 +20,20 @@ import { authMiddleware } from "./middleware/authMiddleware";
 
   app.get("/healthz", (req, res) => res.send({ status: "OK!!" }));
 
-  app.post("/v1/signup", signUp);
+  app.post("/api/v1/signup", signUp);
 
-  app.post("/v1/signin", signIn);
+  app.post("/api/v1/signin", signIn);
+
+  app.get("/api/v1/posts", listPosts);
 
   app.use(authMiddleware);
-
-  app.get("/v1/posts", listPosts);
 
   app.post("/v1/posts", createPost);
 
   app.use(errHandler);
 
   const env = process.env.ENV;
-  const port = process.env.PORT
+  const port = process.env.PORT;
 
   const listener = () => {
     console.log(

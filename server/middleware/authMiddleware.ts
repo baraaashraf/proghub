@@ -1,5 +1,5 @@
 import { verifyJwt } from "../auth";
-import { ExpressHandler } from "../types";
+import { ExpressHandler } from "../../shared/src/types";
 import { db } from "../data";
 export const authMiddleware: ExpressHandler<any, any> = async (
   req,

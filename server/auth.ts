@@ -1,4 +1,4 @@
-import { JwtObject } from "./types";
+import { JwtObject } from "../shared/src/types";
 import jwt from "jsonwebtoken";
 
 export function signJwt(obj: JwtObject): string {

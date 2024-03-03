@@ -1,5 +1,5 @@
 import { DataStore } from "..";
-import { User, Post, Like, Comment } from "../../types";
+import { User, Post, Like, Comment } from "../../../shared/src/types";
 import sqlite3 from "sqlite3";
 import { open as sqliteOpen, Database } from "sqlite";
 import path from "path";
