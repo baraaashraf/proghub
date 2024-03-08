@@ -1,17 +1,15 @@
-import { response } from "express";
-import { useEffect, useState } from "react";
-import { Post } from "../../shared";
-export const App = () => {
-  const [posts, setPosts] = useState<Post[]>();
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-  useEffect(() => {
-    fetch("http://localhost:3000/api/v1/posts")
-      .then((res) => res.json())
-      .then((response) => setPosts(response.posts));
-  });
-  return (posts?.length || 0) > 0 ? (
-    <div>JSON.stringfy(posts)</div>
-  ) : (
-    <div>No Posts</div>
-  );
+import { ListPosts } from "./pages/list-posts";
+import { ViewPost } from "./pages/view-post";
+export const App = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={ListPosts} />
+        <Route path='/p/:id' element={ViewPost} />
+      </Routes>
+    </BrowserRouter>
+  )
+
 };
