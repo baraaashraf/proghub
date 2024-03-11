@@ -1,10 +1,12 @@
-import {  EndpointConfig,ERRORS } from '../../../shared';
-import { QueryClient } from '@tanstack/react-query';
+import { EndpointConfig, ERRORS } from "@proghub/shared";
+import { QueryClient } from "@tanstack/react-query";
 
-import { isDev } from '../util';
-import { getLocalStorageJWT, isLoggedIn, signOut } from './auth';
+import { isDev } from "../util";
+import { getLocalStorageJWT, isLoggedIn, signOut } from "./auth";
 
-const API_HOST = isDev ? `http://localhost:${window.location.port}` : 'https://api.codersquare.xyz';
+const API_HOST = isDev
+  ? `http://localhost:3000`
+  : "https://proghub.site";
 
 export class ApiError extends Error {
   public status: number;
@@ -18,11 +20,11 @@ export class ApiError extends Error {
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      networkMode: 'offlineFirst',
+      networkMode: "offlineFirst",
       retry(failureCount, error) {
         const { status } = error as ApiError;
-        if (typeof status !== 'number') {
-          console.error('got non-numeric error code:', error);
+        if (typeof status !== "number") {
+          console.error("got non-numeric error code:", error);
           return true;
         }
         return status >= 500 && failureCount < 2;
@@ -40,15 +42,17 @@ export async function callEndpoint<Request, Response>(
   const response = await fetch(`${API_HOST}${url}`, {
     method: method.toUpperCase(),
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       // We include an Authorization header when it's explicitly required or
       // when the user is logged in.
-      ...((auth || isLoggedIn()) && { Authorization: `Bearer ${getLocalStorageJWT()}` }),
+      ...((auth || isLoggedIn()) && {
+        Authorization: `Bearer ${getLocalStorageJWT()}`,
+      }),
     },
     body: requestBody,
   });
   if (!response.ok) {
-    let msg = '';
+    let msg = "";
     try {
       msg = (await response.json()).error;
       // Sign user out and refresh if the token has expired
@@ -60,6 +64,8 @@ export async function callEndpoint<Request, Response>(
       throw new ApiError(response.status, msg);
     }
   }
-  const isJson = response.headers.get('content-type')?.includes('application/json');
+  const isJson = response.headers
+    .get("content-type")
+    ?.includes("application/json");
   return isJson ? ((await response.json()) as Response) : ({} as Response);
 }

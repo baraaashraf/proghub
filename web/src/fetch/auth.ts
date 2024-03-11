@@ -4,7 +4,7 @@ import {
     SignInResponse,
     SignUpRequest,
     SignUpResponse,
-  } from '../../../shared';
+  } from '@proghub/shared';
   
   import { callEndpoint } from '.';
   

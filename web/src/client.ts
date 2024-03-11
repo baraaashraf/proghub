@@ -1,5 +1,5 @@
 import { response } from "express";
-import { ListPostsRequest, ListPostsResponse } from "../../shared";
+import { ListPostsRequest, ListPostsResponse } from "@proghub/shared";
 
 export const HOST =
   process.env.NODE_ENV === "development"
@@ -9,7 +9,7 @@ export const HOST =
 export const listPosts = async (
   req: ListPostsRequest
 ): Promise<ListPostsResponse> => {
-  const response = fetch(`${HOST}/api/v1/posts`);
+  const response = fetch(`http://localhost:3000/api/v1/posts`);
   if (!(await response).ok) {
     const error = (await response).json();
     throw error;

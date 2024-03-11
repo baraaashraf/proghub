@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import { db } from "../data";
 import { Post } from "../../shared/src/types";
 import crypto from "crypto";
-import { ExpressHandler } from "../../shared/src/types";
+import { ExpressHandler } from "../types";
 import {
   CreatePostRequest,
   CreatePostResponse,

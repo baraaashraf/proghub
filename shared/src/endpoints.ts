@@ -47,7 +47,6 @@ export type EndpointConfig = {
   
   export const ENDPOINT_CONFIGS: { [key in Endpoints]: EndpointConfig } = {
     [Endpoints.healthz]: { method: 'get', url: '/api/v1/healthz' },
-  
     [Endpoints.signin]: { method: 'post', url: '/api/v1/signin', sensitive: true },
     [Endpoints.signup]: { method: 'post', url: '/api/v1/signup', sensitive: true },
     [Endpoints.getUser]: { method: 'get', url: '/api/v1/users/:id' },

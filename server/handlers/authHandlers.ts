@@ -4,7 +4,7 @@ import {
   SignInRequest,
   SignUpResponse,
 } from "../../shared/src/api";
-import { ExpressHandler, JwtObject } from "../../shared/src/types";
+import { ExpressHandler, JwtObject } from "../types";
 import { db } from "../data";
 import { User } from "../../shared/src/types";
 import crypto from "crypto";
