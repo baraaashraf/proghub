@@ -90,7 +90,7 @@ export const PostCard: React.FC<{ post: Post; refetch: () => unknown; hideDiscus
 
                 <Flex gap={1} fontSize="sm" color="gray.500">
                     <Text>By:</Text>
-                    <Link to={user ? `/u/${user.id}` : '#'}>
+                    <Link to={user ? ROUTES.USER_PROFILE(user.id) : '#'}>
                         <Text fontWeight="bold">{userName}</Text>
                     </Link>
 

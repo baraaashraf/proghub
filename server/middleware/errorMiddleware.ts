@@ -1,6 +1,8 @@
-import { ErrorRequestHandler } from "express";
+import { ErrorRequestHandler } from 'express';
 
-export const errHandler: ErrorRequestHandler = (err, req, res, next) => {
-    console.error("Uncaught Exception", err);
-    res.status(500).send("Oops, an error occured, please try again");
-  };
+import { LOGGER } from '../logging';
+
+export const errHandler: ErrorRequestHandler = (err, _, res, __) => {
+  LOGGER.error('Uncaught exception:', err);
+  return res.status(500).send('Oops, an unexpected error occurred, please try again');
+};
