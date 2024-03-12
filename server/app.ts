@@ -1,22 +1,27 @@
-import { ENDPOINT_CONFIGS, Endpoints } from '@proghub/shared';
-import cors from 'cors';
-import express, { RequestHandler } from 'express';
-import asyncHandler from 'express-async-handler';
+import { ENDPOINT_CONFIGS, Endpoints } from "@proghub/shared";
+import cors from "cors";
+import express, { RequestHandler } from "express";
+import asyncHandler from "express-async-handler";
 
-import { db, initDb } from './datastore';
-import { CommentHandler } from './handlers/commentHandler';
-import { LikeHandler } from './handlers/likeHandler';
-import { PostHandler } from './handlers/postHandlers';
-import { UserHandler } from './handlers/userHandlers';
-import { LOGGER } from './logging';
-import { enforceJwtMiddleware, jwtParseMiddleware } from './middleware/authMiddleware';
-import { errHandler } from './middleware/errorMiddleware';
-import { loggerMiddleware } from './middleware/loggerMiddleware';
+import { db, initDb } from "./datastore";
+import { CommentHandler } from "./handlers/commentHandler";
+import { LikeHandler } from "./handlers/likeHandler";
+import { PostHandler } from "./handlers/postHandlers";
+import { UserHandler } from "./handlers/userHandlers";
+import { LOGGER } from "./logging";
+import {
+  enforceJwtMiddleware,
+  jwtParseMiddleware,
+} from "./middleware/authMiddleware";
+import { errHandler } from "./middleware/errorMiddleware";
+import { loggerMiddleware } from "./middleware/loggerMiddleware";
 
 export async function createServer(logRequests = true) {
   const dbPath = process.env.DB_PATH;
+  console.log(process.env);
+  console.log(process.env.DB_PATH);
   if (!dbPath) {
-    LOGGER.error('DB_PATH env var missing');
+    LOGGER.error("DB_PATH env var missing");
     process.exit(1);
   }
   await initDb(dbPath);
@@ -40,7 +45,7 @@ export async function createServer(logRequests = true) {
 
   // map of endpoints handlers
   const HANDLERS: { [key in Endpoints]: RequestHandler<any, any> } = {
-    [Endpoints.healthz]: (_, res) => res.send({ status: 'ok!' }),
+    [Endpoints.healthz]: (_, res) => res.send({ status: "ok!" }),
 
     [Endpoints.signin]: userHandler.signIn,
     [Endpoints.signup]: userHandler.signUp,
@@ -63,7 +68,7 @@ export async function createServer(logRequests = true) {
     [Endpoints.deleteComment]: commentHandler.delete,
   };
   // register handlers in express
-  Object.keys(Endpoints).forEach(entry => {
+  Object.keys(Endpoints).forEach((entry) => {
     const config = ENDPOINT_CONFIGS[entry as Endpoints];
     const handler = HANDLERS[entry as Endpoints];
 
@@ -74,20 +79,21 @@ export async function createServer(logRequests = true) {
           enforceJwtMiddleware,
           asyncHandler(handler)
         )
-      : app[config.method](config.url, jwtParseMiddleware, asyncHandler(handler));
+      : app[config.method](
+          config.url,
+          jwtParseMiddleware,
+          asyncHandler(handler)
+        );
   });
 
   app.use(errHandler);
-
 
   // start server, https in production, otherwise http.
   const { ENV } = process.env;
 
   if (!ENV) {
-    throw 'Environment not defined, make sure to pass in env vars or have a .env file at root.';
+    throw "Environment not defined, make sure to pass in env vars or have a .env file at root.";
   }
-
-
 
   return app;
 }
